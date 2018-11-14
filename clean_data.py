@@ -1,3 +1,5 @@
+# import lightgbm
+import torch
 import numpy as py
 import sys
 import numpy as np
@@ -9,12 +11,12 @@ import itertools
 # import operator
 # import timei
 
-def main(): 
+def main():
 	print "start"
 	inputfilename = "train.csv"
 	data = pd.read_csv(inputfilename)
 
-	
+
 	print "finished"
 
 
