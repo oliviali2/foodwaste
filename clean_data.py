@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import math, random
 
-n_in, n_h, n_out, batch_size = 10, 5, 1, 10 #define sizes of all the layers and batch size
+
 
 
 # import matplotlib
@@ -17,13 +17,14 @@ n_in, n_h, n_out, batch_size = 10, 5, 1, 10 #define sizes of all the layers and 
 # import timei
 
 def main(): 
-	print "start"
-	inputfilename = "train_small.csv"
+	# print "start"
+	# inputfilename = "train_small.csv"
 
-	data = pd.read_csv(inputfilename)	
+	# data = pd.read_csv(inputfilename)	
 
-	print "finished"
+	# print "finished"
 
+	n_in, n_h, n_out, batch_size = 10, 5, 1, 10 #define sizes of all the layers and batch size
 	x = torch.randn(batch_size, n_in)
 	y = torch.tensor([[1.0], [0.0], [0.0], [1.0], [1.0], [1.0], [0.0], [0.0], [1.0], [1.0]])
 	model = nn.Sequential(nn.Linear(n_in, n_h),
@@ -34,25 +35,12 @@ def main():
 	optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 
 	for epoch in range(50):
-		#Forward Propagation
 		y_pred = model(x)
-
-    	# print 'epoch: '
-    	print "hi"
-
-    	loss = criterion(y_pred, y)
-
-    	print "hi2"
-    	print('epoch: ', epoch,' loss: ', loss.item())
-   		# Zero the gradients
-    	optimizer.zero_grad()
-    
-    	# perform a backward pass (backpropagation)
-    	loss.backward()
-    
-    	# Update the parameters
-    	optimizer.step()
-
+		loss = criterion(y_pred, y)
+		print('epoch: ', epoch,' loss: ', loss.item())
+		optimizer.zero_grad()
+		loss.backward()
+		optimizer.step()
 
 
 
