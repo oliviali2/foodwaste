@@ -8,22 +8,34 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.preprocessing import OneHotEncoder 
 
 #fix random seed for reproducibility
 seed = 7
 
 #dataset = np.loadtxt("train_small_no_label.csv", delimiter=",")
 dataset = pd.read_csv('train_small.csv')
+enc = OneHotEncoder(handle_unknown = 'ignore', sparse = False)
 
-#split into input (X) and output (Y) variables
 
 X = dataset.iloc[:, 1:4].values
 Y = dataset.iloc[:, 4].values
+X_transform = enc.fit_transform(X)
 
+#enc.fit(X)
+
+X_train = X_transform[:-20]
+X_test = X_transform[-20:]
+
+Y_train = Y[:-20]
+Y_test = Y[-20:]
+
+
+#scaling each feature to a given range
 Y = np.reshape(Y, (-1, 1))
+
 scaler = MinMaxScaler()
-print(scaler.fit(X))
+print(scaler.fit(X_transform))
 print(scaler.fit(Y))
 
 xscale = scaler.transform(X)
@@ -102,8 +114,8 @@ estimators.append(('standardize', StandardScaler()))
 estimators.append(('mlp', KerasRegressor(build_fn=larger_model, epochs=100, batch_size=5, verbose=0)))
 pipeline = Pipeline(estimators)
 kfold = KFold(n_splits=10, random_state=seed)
-results = cross_val_score(pipeline, X, Y, cv=kfold)
-print("Larger: %.2f (%.2f) MAE" % (results.mean(), results.std()))
+results = cross_val_score(pipeline, xscale, yscale, cv=kfold)
+print("Larger: %.2f (%.2f) MSE" % (results.mean(), results.std()))
 print results
 
 
