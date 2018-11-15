@@ -1,35 +1,72 @@
 from keras.models import Sequential
 from keras.layers import Dense
-import numpy
+import numpy as np
+import pandas as pd
+from keras.wrappers.scikit_learn import KerasRegressor
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+
 
 #fix random seed for reproducibility
-numpy.random.seed(7)
+seed = 7
 
-dataset = numpy.loadtxt("train_small_no_label.csv", delimiter=",")
+#dataset = np.loadtxt("train_small_no_label.csv", delimiter=",")
+dataset = pd.read_csv('train_small.csv')
 #split into input (X) and output (Y) variables
 
-X = dataset[:, 1:4]
-Y = dataset[:, 4]
+X = dataset.iloc[:, 1:4].values
+Y = dataset.iloc[:, 4].values
 
 #define model
-model = Sequential()
-model.add(Dense(3, input_dim = 3, activation = 'relu')) #number of neurons in input layer?
-model.add(Dense(3, activation = 'relu')) #number of neurons in hidden layer????
-model.add(Dense(1, activation = 'sigmoid'))
+def baseline_model():
+	model = Sequential()
 
-#compile model
-#[TODO] think about which loss function to use --- mse? mae? etc.
-model.compile(loss='mean_absolute_error', optimizer='adam', metrics=['mean_absolute_error']) 
+	model.add(Dense(3, input_dim = 3, kernel_initializer = 'normal', activation = 'relu')) #number of neurons in input layer?
+	model.add(Dense(3, kernel_initializer = 'normal', activation = 'relu')) #number of neurons in hidden layer????
+	#model.add(Dense(1, activation = 'sigmoid'))
+
+	model.add(Dense(1, kernel_initializer = 'normal'))
+
+	#compile model
+	#[TODO] think about which loss function to use --- mse? mae? etc.
+	model.compile(loss='mean_absolute_error', optimizer='adam') 
+	return model
+
 
 #fit the model
 #[TODO] play with epoch and batch size
-model.fit(X, Y, epochs = 150, batch_size = 5)
+#model.fit(X, Y, epochs = 150, batch_size = 5, verbose = 0)
 
-#evaluate model
-scores = model.evaluate(X, Y)
-print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 
-predictions = model.predict(X)
-rounded = [(roundedx[0]) for x in predictions]
-print(rounded)
+#BASELINE
+# estimator = KerasRegressor(build_fn = baseline_model, epochs = 100, batch_size = 5, verbose = 0)
+
+# kfold = KFold(n_splits=10, random_state=seed)
+# results = cross_val_score(estimator, X, Y, cv=kfold)
+# print("Results: %.2f (%.2f) MSE" % (results.mean(), results.std()))
+
+
+# #evaluate model
+# scores = model.evaluate(X, Y)
+# print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+
+# predictions = model.predict(X)
+# rounded = [round(x[0]) for x in predictions]
+# print(rounded)
+
+
+
+#STANDARDIZED
+# evaluate model with standardized dataset
+np.random.seed(seed)
+estimators = []
+estimators.append(('standardize', StandardScaler()))
+estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, epochs=50, batch_size=5, verbose=0)))
+pipeline = Pipeline(estimators)
+kfold = KFold(n_splits=10, random_state=seed)
+results = cross_val_score(pipeline, X, Y, cv=kfold)
+print("Standardized: %.2f (%.2f) MSE" % (results.mean(), results.std()))
+
 
