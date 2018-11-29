@@ -2,9 +2,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold
+from sklearn.metrics import log_loss
 from sklearn import preprocessing
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
+from sklearn import model_selection
+from sklearn.linear_model import LinearRegression
 
 import numpy as np
 import pandas as pd
@@ -42,9 +45,6 @@ for train_index, dev_index in kf.split(X):
 	y_train, y_dev = y[train_index], y[dev_index]
 
 
-# Models = [LogisticRegression, SGDClassifier]
-# params = [{}, {"loss": "log", "penalty": "l2", 'n_iters': 1000}]
-
 clf = linear_model.SGDRegressor(max_iter=1000, tol=1e-3)
 clf.fit(X_train, y_train)
 
@@ -57,10 +57,19 @@ clf.fit(X_train, y_train)
 
 trainPrediction = clf.predict(X_train)
 print mean_squared_error(y_train, trainPrediction)
+# print trainPrediction
+# print y_train
+
 
 prediction = clf.predict(X_dev)
-print prediction
-
-print y_dev
+# print prediction
+# print y_dev
 print mean_squared_error(y_dev, prediction)
 
+
+# seed = 7
+# kfold = model_selection.KFold(n_splits=2, random_state=seed)
+# model = linear_model.SGDRegressor()
+# scoring = 'neg_mean_absolute_error'
+# results = model_selection.cross_val_score(model, X, y, cv=kfold, scoring=scoring)
+# print("MAE: %.3f (%.3f)") % (results.mean(), results.std())
