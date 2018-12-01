@@ -2,7 +2,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold
-from sklearn.metrics import log_loss
 from sklearn import preprocessing
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
@@ -26,7 +25,6 @@ onehotlabels.shape
 
 X = onehotlabels
 
-
 scaler = preprocessing.StandardScaler().fit(X) # Don't cheat - fit only on training data
 X = scaler.transform(X) # apply same transformation to test data
 
@@ -44,7 +42,6 @@ for train_index, dev_index in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
-
 clf = linear_model.SGDRegressor(max_iter=1000, tol=1e-3)
 clf.fit(X_train, y_train)
 
@@ -60,12 +57,10 @@ print mean_squared_error(y_train, trainPrediction)
 # print trainPrediction
 # print y_train
 
-
 prediction = clf.predict(X_dev)
 # print prediction
 # print y_dev
 print mean_squared_error(y_dev, prediction)
-
 
 # seed = 7
 # kfold = model_selection.KFold(n_splits=2, random_state=seed)
