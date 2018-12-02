@@ -11,21 +11,22 @@ dtypes = {'store_nbr': np.dtype('int64'),
           'unit_sales': np.dtype('float64'),
           }
 
-pd_train = pd.read_csv('train_small.csv', dtype=dtypes)
+pd_train = pd.read_csv('data/train_small.csv', dtype=dtypes)
 
 # pd_train = pd_train.where((pd.notnull(pd_train)), None)
 
-stores = pd.read_csv('stores.csv')
+stores = pd.read_csv('data/stores.csv')
 items = pd.read_csv('data/items.csv')
 #Not downloaded
-trans = pd.read_csv('transactions.csv')
-oil = pd.read_csv('oil.csv')
+trans = pd.read_csv('data/transactions.csv')
+oil = pd.read_csv('data/oil.csv')
 holidays = pd.read_csv('data/holidays_events.csv')
 
 
 
 print('DATATYPES: train')
 print(pd_train.dtypes)
+print(pd_train.head())
 # print('DATATYPES: items')
 # print(items.dtypes)
 
@@ -45,8 +46,7 @@ cols.insert(len(cols)-1, cols.pop(cols.index('unit_sales')))
 pd_train = pd_train[cols]
 pd_train = pd_train.where((pd.notnull(pd_train)), None)
 pd_train = pd_train.rename(index=str, columns={"type_x": "type_store", "type_y": "type_holiday"})
-pd_train = pd_train.drop(pd_train.columns[0], axis=1)
-pd_train.to_csv('cleaned_train_small.csv')
+pd_train.to_csv('data/cleaned_train_small.csv')
 
 print('after merging ')
 print(list(pd_train.columns.values))

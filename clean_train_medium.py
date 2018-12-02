@@ -12,44 +12,35 @@ dtypes = {'store_nbr': np.dtype('int64'),
           }
 
 '''Change this line to run on train_medium.csv '''
-pd_train = pd.read_csv('train_medium.csv', dtype=dtypes)
+pd_train = pd.read_csv('data/train_medium.csv', dtype=dtypes)
 
 stores = pd.read_csv('data/stores.csv',  dtype=dtypes)
 items = pd.read_csv('data/items.csv',  dtype=dtypes)
-#trans = pd.read_csv('transactions.csv',  dtype=dtypes)
+#trans = pd.read_csv('data/transactions.csv',  dtype=dtypes)
 oil = pd.read_csv('data/oil.csv')
 holidays = pd.read_csv('data/holidays_events.csv', dtype=dtypes)
 
-
+print('after reading: \n')
 
 print('DATATYPES: train')
 print(pd_train.dtypes)
-print('DATATYPES: items')
-print(items.dtypes)
-
+# print('DATATYPES: items')
+# print(items.dtypes)
 
 print(pd_train.head())
-print('stores')
-print(stores.head())
+# print('stores')
+# print(stores.head())
 
 
-# pd_train = pd_train.drop(['id'], axis = 1)
-
-
-
+pd_train = pd_train.drop(['onpromotion'], axis = 1)
 # print(pd_train.head())
 pd_train = pd_train.merge(stores, left_on='store_nbr', right_on='store_nbr', how='left')
-# print('merged stores')
-#
-# print(pd_train.head())
 
 pd_train = pd_train.merge(items, left_on='item_nbr', right_on='item_nbr', how='left')
 # print('merged item')
-#
 # print(pd_train.head())
 pd_train = pd_train.merge(holidays, left_on='date', right_on='date', how='left')
 # print('merged holidays')
-#
 # print(pd_train.head())
 pd_train = pd_train.merge(oil, left_on='date', right_on='date', how='left')
 # print('merged oil')
@@ -70,14 +61,15 @@ pd_train = pd_train[cols]
 pd_train = pd_train.rename(index=str, columns={"type_x": "type_store", "type_y": "type_holiday"})
 
 pd_train = pd_train.sort_values(by=['id'])
-pd_train = pd_train.drop(['id'], axis = 1)
-print('dropped id')
+
 
 '''Change this line to write results to cleaned_train_medium.csv '''
-pd_train.to_csv('cleaned_train_medium.csv')
+pd_train.to_csv('data/cleaned_train_medium.csv', index=False)
 
 print('after merging ')
 print(list(pd_train.columns.values))
+print('head:')
+print(pd_train.head())
 print('# of lines in cleaned dataframe: '+ str(pd_train.count()))
 print('final column names: \n')
 print(pd_train.columns.values)
