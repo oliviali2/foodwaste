@@ -10,15 +10,15 @@ import numpy as np
 #           'item_nbr': np.dtype('int64'),
 #           'unit_sales': np.dtype('float64'),
 #           }
-print('HEKM')
+
 
 pd_train = pd.read_csv('data/train.csv')
 pd_train = pd_train.fillna(0)
 
-stores = pd.read_csv('stores.csv')
+stores = pd.read_csv('data/stores.csv')
 items = pd.read_csv('data/items.csv')
-trans = pd.read_csv('transactions.csv')
-oil = pd.read_csv('oil.csv')
+# trans = pd.read_csv('data/transactions.csv')
+oil = pd.read_csv('data/oil.csv')
 holidays = pd.read_csv('data/holidays_events.csv')
 
 print('columns before merging')

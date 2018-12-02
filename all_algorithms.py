@@ -12,7 +12,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 
-dataset = pd.read_csv('data/train_medium.csv')
+# dataset = pd.read_csv('data/train_medium.csv')
+dataset = pd.read_csv('data/cleaned_train_medium.csv')
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
 X = dataset.iloc[:, 1:5].values
@@ -61,8 +62,8 @@ def run_NN():
 	mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
 
 	mlp.fit(X_train, y_train)
-	print "LR MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
-	print "LR R^2 score: " + str(mlp.score(X_dev, y_dev))
+	print "NN MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
+	print "NN R^2 score: " + str(mlp.score(X_dev, y_dev))
 
 def main():
 	run_SVR()
