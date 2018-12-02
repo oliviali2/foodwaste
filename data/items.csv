@@ -1,4 +1,4 @@
-id,family,class,perishable
+item_nbr,family,class,perishable
 103665,GROCERY I,1093,0
 99197,GROCERY I,1067,0
 103501,CLEANING,3008,0
