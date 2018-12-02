@@ -1,11 +1,18 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from sklearn.metrics import mean_squared_error
+from sklearn.neural_network import MLPRegressor
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
+from sklearn import preprocessing
+from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
-import pyplot 
 
-dataset = pd.read_csv('train_medium.csv')
+dataset = pd.read_csv('data/train_medium.csv')
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
 
@@ -31,39 +38,11 @@ for train_index, dev_index in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
+mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
 
-class Net(nn.Module):
-	def__init__(self, name = 'model', input = 10):
-		self.name = name
-		self.net = torch.nn.Sequential(
-			torch.nn.Lniear(input, 10)
-			torch.nn.Relu()
-
-			torch.nn.Linear(10,10)
-			torch.nn.Relu()
-
-			torch.nn.Linear(10, 1)
-			torch.nn.Relu()
-		)
-
-	def forward(self, x):
-		return self.net(x)
-
-	def loss(self, output, y):
-		return torch...MSE(output, y)
+mlp.fit(X_train, y_train)
+print "LR MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
+print "LR R^2 score: " + str(mlp.score(X_dev, y_dev))
 
 
-def train():
-	model = NeuralNetwork('our_model')
-	optimizer = torch.optim.Adam(...)
-
-	for e in range(epochs):
-		for x, y in data:
-			optimizer.zero_grad()
-
-			output = model(x)
-			loss = model.loss(output, y)
-
-			loss.backward()
-			optimizer.step()
 

@@ -1,17 +1,20 @@
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import OneHotEncoder
+
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import KFold
-from sklearn import preprocessing
+
+
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn import model_selection
 from sklearn.linear_model import LinearRegression
 
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
+from sklearn import preprocessing
+from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
 
-dataset = pd.read_csv('train_medium.csv')
+dataset = pd.read_csv('data/train_medium.csv')
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
 
@@ -51,6 +54,8 @@ clf.fit(X_train, y_train)
 #        n_iter=None, n_iter_no_change=5, penalty='l2', power_t=0.25,
 #        random_state=None, shuffle=True, tol=0.001, validation_fraction=0.1,
 #        verbose=0, warm_start=False)
+
+
 
 trainPrediction = clf.predict(X_train)
 print mean_squared_error(y_train, trainPrediction)
