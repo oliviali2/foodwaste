@@ -1,4 +1,11 @@
-#all algorithms
+'''
+This code contains all the models and algorithms used for this project:
+1. SVR
+2. SGD
+3. Linear regression
+4. Neural network
+'''
+
 import numpy as np
 from sklearn.svm import SVR
 import matplotlib.pyplot as plt
@@ -14,10 +21,16 @@ from sklearn import linear_model
 
 # dataset = pd.read_csv('data/train_medium.csv')
 dataset = pd.read_csv('data/cleaned_train_medium.csv')
+has_n = dataset.columns[dataset.isna().any()].tolist()
+print('these cols have nan:', has_n)
+
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
-X = dataset.iloc[:, 1:5].values
-y = dataset.iloc[:, 5].values
+X = dataset.iloc[:, 1:11].values
+y = dataset.iloc[:, 11].values
+
+
+
 
 enc.fit(X)
 #print enc.categories_
@@ -42,28 +55,28 @@ for train_index, dev_index in kf.split(X):
 def run_SVR():
 	clf = SVR(gamma = 'scale', C = 1.0, epsilon = 0.2)
 	clf.fit(X_train, y_train)
-	print "SVR MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev)))
+	print ("SVR MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev))))
 	print("SVR R^2 score: " + str(clf.score(X_dev, y_dev)))
 
 def run_SGD():
 	clf = linear_model.SGDRegressor(max_iter=1000, tol=1e-3)
 	clf.fit(X_train, y_train)
 
-	print "SGD MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev)))
+	print("SGD MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev))))
 	print("SGD R^2 score: " + str(clf.score(X_dev, y_dev)))
 
 def run_LR():
 	regr = LinearRegression()
 	regr.fit(X_train, y_train)
-	print "LR MSE: " + str(mean_squared_error(y_dev, regr.predict(X_dev)))
+	print ("LR MSE: " + str(mean_squared_error(y_dev, regr.predict(X_dev))))
 	print("LR R^2 score: " + str(regr.score(X_dev, y_dev)))
 
 def run_NN():
 	mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
 
 	mlp.fit(X_train, y_train)
-	print "NN MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
-	print "NN R^2 score: " + str(mlp.score(X_dev, y_dev))
+	print( "NN MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev))))
+	print( "NN R^2 score: " + str(mlp.score(X_dev, y_dev)))
 
 def main():
 	run_SVR()

@@ -39,7 +39,7 @@ pd_train = pd_train.merge(holidays, left_on='date', right_on='date', how='left')
 pd_train = pd_train.merge(oil, left_on='date', right_on='date', how='left')
 # print('merged oil')
 # print(pd_train.head())
-pd_train = pd_train.drop(['description', 'state', 'locale_name', 'class', 'dcoilwtico', 'transferred'], axis = 1)
+pd_train = pd_train.drop(['description', 'state', 'locale_name', 'class', 'dcoilwtico'], axis = 1)
 # print('dropped bunch of stuff')
 # print(pd_train.head())
 
@@ -59,13 +59,6 @@ print('after merging and rearranging:')
 print(pd_train.head())
 print(pd_train.dtypes)
 
-'''Replace missing values'''
-#family column: fill missing values w/ most frequent category
-pd_train = pd_train['family'].fillna(pd_train.family.mode())
-#type_holiday column: fill missing values w/ 'Regular'
-
-#locale column: fill missing w/ 'NA'
-pd_train = pd_train['locale'].fillna('NA')
 
 
 '''Write results to cleaned_train_medium.csv '''

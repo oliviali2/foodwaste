@@ -13,13 +13,14 @@ import numpy as np
 
 
 pd_train = pd.read_csv('data/train.csv')
-pd_train = pd_train.fillna(0)
+pd_train = pd_train['onpromotion'].fillna(-1)
 
 stores = pd.read_csv('data/stores.csv')
 items = pd.read_csv('data/items.csv')
 # trans = pd.read_csv('data/transactions.csv')
 oil = pd.read_csv('data/oil.csv')
 holidays = pd.read_csv('data/holidays_events.csv')
+
 
 print('columns before merging')
 print(list(pd_train.columns.values))
