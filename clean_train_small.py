@@ -45,7 +45,7 @@ cols.insert(len(cols)-1, cols.pop(cols.index('unit_sales')))
 pd_train = pd_train[cols]
 pd_train = pd_train.where((pd.notnull(pd_train)), None)
 pd_train = pd_train.rename(index=str, columns={"type_x": "type_store", "type_y": "type_holiday"})
-
+pd_train = pd_train.drop(pd_train.columns[0], axis=1)
 pd_train.to_csv('cleaned_train_small.csv')
 
 print('after merging ')
