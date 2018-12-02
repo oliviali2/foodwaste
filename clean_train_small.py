@@ -1,3 +1,8 @@
+'''
+This code works to clean the train_small and train_medium datasets.
+To clean the actual train dataset, open and run clean_train.py
+'''
+
 import pandas as pd
 import numpy as np
 
@@ -6,15 +11,9 @@ dtypes = {'store_nbr': np.dtype('int64'),
           'unit_sales': np.dtype('float64'),
           }
 
-pd_train = pd.read_csv('train_medium.csv', dtype=dtypes)
+pd_train = pd.read_csv('train_small.csv', dtype=dtypes)
 
-pd_train = pd_train.where((pd.notnull(pd_train)), None)
-
-# for col in pd_train:
-#     if col in dtypes:
-#         pd_train[col] = pd_train[col].astype(dtypes[col])
-
-# test = pd.read_csv('data/test.csv', dtype=dtypes)
+# pd_train = pd_train.where((pd.notnull(pd_train)), None)
 
 stores = pd.read_csv('stores.csv')
 items = pd.read_csv('data/items.csv')
@@ -25,8 +24,8 @@ holidays = pd.read_csv('data/holidays_events.csv')
 
 
 
-# print('DATATYPES: train')
-# print(pd_train.dtypes)
+print('DATATYPES: train')
+print(pd_train.dtypes)
 # print('DATATYPES: items')
 # print(items.dtypes)
 
@@ -46,9 +45,11 @@ cols.insert(len(cols)-1, cols.pop(cols.index('unit_sales')))
 pd_train = pd_train[cols]
 pd_train = pd_train.where((pd.notnull(pd_train)), None)
 pd_train = pd_train.rename(index=str, columns={"type_x": "type_store", "type_y": "type_holiday"})
-pd_train.to_csv('cleaned_train_medium.csv')
+
+pd_train.to_csv('cleaned_train_small.csv')
 
 print('after merging ')
 print(list(pd_train.columns.values))
 print('# of lines in cleaned dataframe: '+ str(pd_train.count()))
-print(pd_train.values[0])
+print('final column names: \n')
+print(pd_train.columns.values)
