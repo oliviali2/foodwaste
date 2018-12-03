@@ -12,12 +12,14 @@ from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
 
-dataset = pd.read_csv('data/train_medium.csv')
+dataset = pd.read_csv('data/cleaned_train_medium.csv')
+has_n = dataset.columns[dataset.isna().any()].tolist()
+print('these cols have nan:', has_n)
+
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
-
-X = dataset.iloc[:, 1:5].values
-y = dataset.iloc[:, 5].values
+X = dataset.iloc[:, 1:11].values
+y = dataset.iloc[:, 11].values
 
 enc.fit(X)
 #print enc.categories_
@@ -38,11 +40,16 @@ for train_index, dev_index in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
-mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
+
+
+#mlp = MLPRegressor(hidden_layer_sizes = (20,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.05, alpha=0.01)
+mlp = MLPRegressor(hidden_layer_sizes = (20,), activation = 'relu',
+solver='adam',learning_rate='adaptive', max_iter=1000,
+learning_rate_init=0.05, alpha=0.01, tol=1e-5, n_iter_no_change=15)
 
 mlp.fit(X_train, y_train)
-print "LR MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
-print "LR R^2 score: " + str(mlp.score(X_dev, y_dev))
+print "NN MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev)))
+print "NN R^2 score: " + str(mlp.score(X_dev, y_dev))
 
 
 

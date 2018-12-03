@@ -14,12 +14,17 @@ from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
 
-dataset = pd.read_csv('data/train_medium.csv')
+dataset = pd.read_csv('data/cleaned_train_medium.csv')
+has_n = dataset.columns[dataset.isna().any()].tolist()
+print('these cols have nan:', has_n)
+
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
+X = dataset.iloc[:, 1:11].values
+y = dataset.iloc[:, 11].values
 
-X = dataset.iloc[:, 1:5].values
-y = dataset.iloc[:, 5].values
+
+
 
 enc.fit(X)
 #print enc.categories_
@@ -30,11 +35,6 @@ X = onehotlabels
 
 scaler = preprocessing.StandardScaler().fit(X) # Don't cheat - fit only on training data
 X = scaler.transform(X) # apply same transformation to test data
-
-# X_train = X[:-50]
-# X_dev = X[-50:]
-# y_train = y[:-50]
-# y_dev = y[-50:]
 
 numFolds = 2
 

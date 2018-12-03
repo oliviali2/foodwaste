@@ -10,11 +10,13 @@ import numpy as np
 import pandas as pd
 
 dataset = pd.read_csv('data/cleaned_train_medium.csv')
+has_n = dataset.columns[dataset.isna().any()].tolist()
+print('these cols have nan:', has_n)
+
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
-
-X = dataset.iloc[:, 1:5].values
-y = dataset.iloc[:, 5].values
+X = dataset.iloc[:, 1:11].values
+y = dataset.iloc[:, 11].values
 
 enc.fit(X)
 #print enc.categories_
@@ -34,12 +36,8 @@ for train_index, dev_index in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
-regr = LinearRegression()
+regr = LinearRegression(normalize = True)
 regr.fit(X_train, y_train)
 print "LR MSE: " + str(mean_squared_error(y_dev, regr.predict(X_dev)))
 print("LR R^2 score: " + str(regr.score(X_dev, y_dev)))
 
-plt.scatter(X_train, y_train,color='g')
-plt.plot(X_train, regr.predict(X),color='k')
-
-plt.show()

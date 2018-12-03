@@ -53,7 +53,7 @@ for train_index, dev_index in kf.split(X):
 
 
 def run_SVR():
-	clf = SVR(gamma = 'scale', C = 1.0, epsilon = 0.2)
+	clf = SVR(gamma = 'scale', C = 16.7, epsilon = 0.8)
 	clf.fit(X_train, y_train)
 
 	y_predict = clf.predict(X_dev)
@@ -79,7 +79,7 @@ def run_SGDR():
 	plot("SGDR", X_dev, y_dev, y_predict)
 
 def run_LR():
-	regr = LinearRegression()
+	regr = LinearRegression(normalize = True)
 	regr.fit(X_train, y_train)
 
 	y_predict = regr.predict(X_dev)
@@ -91,8 +91,10 @@ def run_LR():
 	plot("LR", X_dev, y_dev, y_predict)
 
 def run_NN():
-	mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
-
+	#mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
+	mlp = MLPRegressor(hidden_layer_sizes = (20,), activation = 'relu',
+	solver='adam',learning_rate='adaptive', max_iter=1000,
+	learning_rate_init=0.05, alpha=0.01, tol=1e-5, n_iter_no_change=15)
 	mlp.fit(X_train, y_train)
 
 	y_predict = mlp.predict(X_dev)

@@ -11,13 +11,17 @@ from sklearn.model_selection import KFold
 from sklearn import preprocessing
 
 
+dataset = pd.read_csv('data/cleaned_train_medium.csv')
+has_n = dataset.columns[dataset.isna().any()].tolist()
+print('these cols have nan:', has_n)
 
-dataset = pd.read_csv('data/train_medium.csv')
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
+X = dataset.iloc[:, 1:11].values
+y = dataset.iloc[:, 11].values
 
-X = dataset.iloc[:, 1:5].values
-y = dataset.iloc[:, 5].values
+
+
 
 enc.fit(X)
 #print enc.categories_
@@ -38,7 +42,8 @@ for train_index, dev_index in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
-clf = SVR(gamma = 'scale', C = 1.0, epsilon = 0.2)
+#clf = SVR(gamma = 'scale', C = 1.0, epsilon = 0.1)
+clf = SVR(gamma = 'scale', C = 16.7, epsilon = 0.8)
 
 clf.fit(X_train, y_train)
 
