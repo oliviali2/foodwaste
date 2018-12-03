@@ -1,4 +1,5 @@
 from sklearn.linear_model import LinearRegression
+from matplotlib import pyplot as plt
 
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
@@ -8,7 +9,7 @@ from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
 
-dataset = pd.read_csv('data/train_medium.csv')
+dataset = pd.read_csv('data/cleaned_train_medium.csv')
 enc = OneHotEncoder(handle_unknown = 'ignore')
 
 
@@ -38,5 +39,7 @@ regr.fit(X_train, y_train)
 print "LR MSE: " + str(mean_squared_error(y_dev, regr.predict(X_dev)))
 print("LR R^2 score: " + str(regr.score(X_dev, y_dev)))
 
+plt.scatter(X_train, y_train,color='g')
+plt.plot(X_train, regr.predict(X),color='k')
 
-
+plt.show()

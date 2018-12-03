@@ -55,33 +55,86 @@ for train_index, dev_index in kf.split(X):
 def run_SVR():
 	clf = SVR(gamma = 'scale', C = 1.0, epsilon = 0.2)
 	clf.fit(X_train, y_train)
-	print ("SVR MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev))))
+
+	y_predict = clf.predict(X_dev)
+	set_lower_bound(y_predict)
+
+	print ("SVR MSE: " + str(mean_squared_error(y_dev, y_predict)))
 	print("SVR R^2 score: " + str(clf.score(X_dev, y_dev)))
 
-def run_SGD():
+	plot("SVR", X_dev, y_dev, y_predict)
+
+
+def run_SGDR():
 	clf = linear_model.SGDRegressor(max_iter=1000, tol=1e-3)
 	clf.fit(X_train, y_train)
 
-	print("SGD MSE: " + str(mean_squared_error(y_dev, clf.predict(X_dev))))
-	print("SGD R^2 score: " + str(clf.score(X_dev, y_dev)))
+	y_predict = clf.predict(X_dev)
+	set_lower_bound(y_predict)
+
+	print("SGDR MSE: " + str(mean_squared_error(y_dev, y_predict)))
+	print("SGDR R^2 score: " + str(clf.score(X_dev, y_dev)))
+
+
+	plot("SGDR", X_dev, y_dev, y_predict)
 
 def run_LR():
 	regr = LinearRegression()
 	regr.fit(X_train, y_train)
-	print ("LR MSE: " + str(mean_squared_error(y_dev, regr.predict(X_dev))))
+
+	y_predict = regr.predict(X_dev)
+	set_lower_bound(y_predict)
+
+	print ("LR MSE: " + str(mean_squared_error(y_dev, y_predict)))
 	print("LR R^2 score: " + str(regr.score(X_dev, y_dev)))
+
+	plot("LR", X_dev, y_dev, y_predict)
 
 def run_NN():
 	mlp = MLPRegressor(hidden_layer_sizes = (3,), activation = 'relu', solver='adam',learning_rate='adaptive', max_iter=1000, learning_rate_init=0.01, alpha=0.01)
 
 	mlp.fit(X_train, y_train)
-	print( "NN MSE: " + str(mean_squared_error(y_dev, mlp.predict(X_dev))))
+
+	y_predict = mlp.predict(X_dev)
+	set_lower_bound(y_predict)
+
+	print( "NN MSE: " + str(mean_squared_error(y_dev, y_predict)))
 	print( "NN R^2 score: " + str(mlp.score(X_dev, y_dev)))
 
+	plot("NN", X_dev, y_dev, y_predict)
+
+def set_lower_bound(y_predict):
+	for idx, val in enumerate(y_predict):
+		y_predict[idx] = max(0, val)
+
+
+def plot(title, X_train, y_train, y_predict):
+	X_revert = enc.inverse_transform(X_train)
+	# print X_revert
+	# print X_revert[:,2]
+	X_plot = np.array(X_revert[:,2])
+	y_plot = np.array(y_train)
+	predict_plot = np.array(y_predict)
+
+	plt.title(title)
+	plt.plot(y_plot, color = 'g')
+	plt.plot(predict_plot, color = 'b')
+	axes = plt.gca()
+	axes.set_ylim([-5,max(max(y_plot), max(predict_plot)) + 5])
+	axes.set_xlim([-100,len(y_plot) + 100])
+	plt.xlabel("Index")
+	plt.ylabel("Unit Sales")
+
+	# plt.scatter(X_plot, y_plot, color='g')
+	# plt.plot(X_plot, predict_plot,color='k')
+
+	plt.show()
+
+
 def main():
-	run_SVR()
-	run_SGD()
 	run_LR()
+	run_SGDR()
+	run_SVR()
 	run_NN()
 
 main()
