@@ -14,6 +14,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import KFold
+from sklearn.model_selection import RepeatedKFold
 from sklearn import preprocessing
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
@@ -21,7 +22,8 @@ from sklearn import linear_model
 from sklearn.linear_model import Lasso
 
 # dataset = pd.read_csv('data/train_medium.csv')
-dataset = pd.read_csv('data/cleaned_train_medium.csv')
+# dataset = pd.read_csv('data/cleaned_train_medium.csv')
+dataset = pd.read_csv('data/cleaned_train_v3.csv')
 has_n = dataset.columns[dataset.isna().any()].tolist()
 print('these cols have nan:', has_n)
 
@@ -43,12 +45,18 @@ X = onehotlabels
 scaler = preprocessing.StandardScaler().fit(X) # Don't cheat - fit only on training data
 X = scaler.transform(X) # apply same transformation to test data
 
-numFolds = 2
+numFolds = 5
 
 #kfold splits your data into train and develop for you
 kf = KFold(n_splits = numFolds)
+# kf = RepeatedKFold(n_splits = numFolds, n_repeats = 10, random_state = None)
+
 kf.get_n_splits(X)
-for train_index, dev_index in kf.split(X):
+for i in kf.split(X):
+	print i
+	break
+
+for train_index, dev_index, in kf.split(X):
 	X_train, X_dev = X[train_index], X[dev_index]
 	y_train, y_dev = y[train_index], y[dev_index]
 
@@ -151,4 +159,5 @@ def main():
 	run_NN()
 	run_Lasso()
 
-main()
+#main()
+run_LR()
